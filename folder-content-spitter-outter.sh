@@ -5,19 +5,25 @@ set -e # Exit if a command fails
 IGNORE_FILE=".foldercontentspitteroutterignore"
 
 # Default output file (can be overridden via command-line arguments)
-OUTPUT_FILE=""
+OUTPUT_FILE="folder-contents.md"
+
+# Tree printing flag
+PRINT_TREE=false
+FILTER_ONLY=false
 
 # Function to display usage
 usage() {
-  echo "Usage: $0 -o output_file [files/folders to filter]"
+  echo "Usage: $0 -o|--output output_file [-t|--print-tree] [-f|--filter-only] [files/folders to filter]"
   exit 1
 }
 
 # Parse command-line arguments
 echo "Parsing command-line arguments..."
-while getopts ":o:" opt; do
+while getopts ":o:t" opt; do
   case $opt in
-    o) OUTPUT_FILE="$OPTARG" ;;
+    -o|--output) OUTPUT_FILE="$OPTARG" ;;
+    -t|--print-tree) PRINT_TREE=true ;; 
+    -f|--filter-only) FILTER_ONLY=true ;;
     \?) echo "Invalid option: -$OPTARG" >&2; usage ;;
     :) echo "Option -$OPTARG requires an argument." >&2; usage ;;
   esac
@@ -40,8 +46,8 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
 echo "Preventing processing of the output file..."
 EXCLUDES+=("$OUTPUT_FILE")
 
-# Check if the .filterignore file exists and load the ignored items
-echo "Checking for .filterignore file..."
+# Check if the .foldercontentspitteroutterignore file exists and load the ignored items
+echo "Checking for .foldercontentspitteroutterignore file..."
 if [ -f "$IGNORE_FILE" ]; then
   echo "Loading excludes from $IGNORE_FILE..."
   while IFS= read -r line || [ -n "$line" ]; do
@@ -52,7 +58,7 @@ if [ -f "$IGNORE_FILE" ]; then
     echo "Excluding: $line"
   done < "$IGNORE_FILE"
 else
-  echo "No .filterignore file found."
+  echo "No .foldercontentspitteroutterignore file found."
 fi
 
 # Collect the additional command-line filters
@@ -79,6 +85,16 @@ else
   FILE_LIST+=($(tree . --gitignore -if --noreport))
 fi
 
+# If the -f (or --filter-only) flag is set, process only specified files
+if [ "$FILTER_ONLY" = true ]; then
+  echo "Filter-only mode enabled. Processing only specified files/folders."
+else
+  # Add files from the current directory if -f flag is not used
+  echo "Including other files from the directory..."
+  ADDITIONAL_FILES=$(tree . --gitignore -if --noreport)
+  FILE_LIST+=($ADDITIONAL_FILES)
+fi
+
 # Debug: Print all the files in the file list
 echo "Files to be processed: ${FILE_LIST[@]}"
 
@@ -91,6 +107,14 @@ done
 
 # Debug: Print files after exclusion
 echo "Files after exclusion: ${FILE_LIST[@]}"
+
+# If the print tree flag is set, print the directory tree at the top of the output file
+if [ "$PRINT_TREE" = treu ]; then
+  echo "Printing the full directory tree at the top of the output file..."
+  echo "## Full Directory Tree" >> "$OUTPUT_FILE"
+  tree . >> "$OUTPUT_FILE"
+  echo "" >> "$OUTPUT_FILE"
+fi
 
 # Process each file in the filtered file list
 for file in "${FILE_LIST[@]}"; do
