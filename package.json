@@ -1,0 +1,15 @@
+{
+    "name": "folder-content-spitter-outter",
+    "version": "1.0.0",
+    "description": "A script for filtering files and folders",
+    "bin": {
+      "filter-script": "folder-content-spitter-outter.sh"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/tannerabread/folder-content-spitter-outter.git"
+    },
+    "author": "Bannon Tanner",
+    "license": "MIT"
+  }
+  
