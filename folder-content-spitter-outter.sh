@@ -3,6 +3,7 @@ set -e # Exit if a command fails
 
 # Define the name of the ignore file (like .gitignore)
 IGNORE_FILE=".foldercontentspitteroutterignore"
+USE_GITIGNORE=true
 
 # Default output file (can be overridden via command-line arguments)
 OUTPUT_FILE="folder-contents.md"
@@ -31,6 +32,10 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     -f|--filter-only)
       FILTER_ONLY=true
+      shift
+      ;;
+    --no-gitignore)
+      USE_GITIGNORE=false
       shift
       ;;
     -*)
@@ -88,7 +93,11 @@ if [ ${#INCLUDES[@]} -gt 0 ]; then
   for item in "${INCLUDES[@]}"; do
     if [ -d "$item" ]; then
       echo "Adding directory: $item"
-      FILE_LIST+=($(tree "$item" --gitignore -if --noreport))
+      if [ "$USE_GITIGNORE" = true ]; then
+        FILE_LIST+=($(tree "$item" --gitignore -if --noreport))
+      else
+        FILE_LIST+=($(tree "$item" -if --noreport))
+      fi
     elif [ -f "$item" ]; then
       echo "Adding file: $item"
       FILE_LIST+=("$item")
@@ -98,7 +107,11 @@ if [ ${#INCLUDES[@]} -gt 0 ]; then
   done
 else
   echo "No specific includes provided, processing current directory..."
-  FILE_LIST+=($(tree . --gitignore -if --noreport))
+  if [ "$USE_GITIGNORE" = true ]; then
+    FILE_LIST+=($(tree . --gitignore -if --noreport))
+  else
+    FILE_LIST+=($(tree . -if --noreport))
+  fi
 fi
 
 # If the -f (or --filter-only) flag is set, process only specified files
@@ -107,7 +120,11 @@ if [ "$FILTER_ONLY" = true ]; then
 else
   # Add files from the current directory if -f flag is not used
   echo "Including other files from the directory..."
-  ADDITIONAL_FILES=$(tree . --gitignore -if --noreport)
+  if [ "$USE_GITIGNORE" = true ]; then
+    ADDITIONAL_FILES=$(tree . --gitignore -if --noreport)
+  else
+    ADDITIONAL_FILES=$(tree . -if --noreport)
+  fi
   FILE_LIST+=($ADDITIONAL_FILES)
 fi
 
@@ -128,7 +145,11 @@ echo "Files after exclusion: ${FILE_LIST[@]}"
 if [ "$PRINT_TREE" = true ]; then
   echo "Printing the full directory tree at the top of the output file..."
   echo "## Full Directory Tree" >> "$OUTPUT_FILE"
-  tree . >> "$OUTPUT_FILE"
+  if [ "$USE_GITIGNORE" = true ]; then
+    tree . --gitignore >> "$OUTPUT_FILE"
+  else
+    tree . >> "$OUTPUT_FILE"
+  fi
   echo "" >> "$OUTPUT_FILE"
 fi
 

@@ -9,24 +9,19 @@ The **Folder Content Spitter-Outer (FCSO)** is a powerful shell-based tool for f
 - **Output contents of filtered files** into a single file with markdown code block formatting.
 - **Highlight syntax** based on file extensions (e.g., `.js`, `.py`, `.ts`).
 - **Exclude large or unnecessary files** from being processed.
-- **Print the directory tree** at the top of the output before applying filters using the `--print-tree` flag.
-- **Filter-only mode**: Specify if only certain files/folders should be included with `--filter-only`.
-
-### Why Use FCSO?
-
-If you've ever needed to combine files into a single document for processing or sharing while avoiding unnecessary files, FCSO is perfect for you. It automates the process of file filtering and content extraction, so you can focus on your work without manually traversing folders and excluding irrelevant files.
+- **Optionally disable `.gitignore`**: By default, the tool respects `.gitignore` in addition to the `.foldercontentspitteroutterignore` file, but you can disable this with `--no-gitignore`.
+- **Print the directory tree**: You can print the full directory tree at the top of the output file with the `--print-tree` option, with or without `.gitignore` filtering.
 
 ---
 
 ## Features
 
 - **.foldercontentspitteroutterignore**: Like `.gitignore`, this file allows you to specify files and folders that should always be excluded from processing.
-- **Command-line filtering**: You can pass specific files or folders to include dynamically, after respecting the `.foldercontentspitteroutterignore` file.
+- **Command-line filtering**: You can pass specific files or folders to include dynamically, after respecting both `.gitignore` and `.foldercontentspitteroutterignore` by default.
 - **Automatic markdown formatting**: Outputs the contents of filtered files into a single file formatted in markdown with code blocks.
 - **Dynamic syntax highlighting**: Detects and highlights code based on file extensions (e.g., JavaScript, Python, CSS).
-- **Alias for ease of use**: You can automatically alias this tool to `fcso` on installation for quick access.
-- **Print the directory tree**: Use the `--print-tree` option to include the full directory tree at the top of the output file before filtering.
-- **Filter-only mode**: When using `--filter-only`, only the files/folders specified via command-line will be included in the output. Without it, additional files will be included on top of the specified ones.
+- **Print the directory tree**: Use the `--print-tree` option to print the directory tree at the top of the output file, with or without `.gitignore` filtering.
+- **Disable `.gitignore`**: You can bypass `.gitignore` by using the `--no-gitignore` flag. By default, the tool respects `.gitignore` and excludes files listed there, along with any specified in `.foldercontentspitteroutterignore`.
 
 ---
 
@@ -52,7 +47,7 @@ If you've ever needed to combine files into a single document for processing or 
 
 ### Basic Usage:
 
-1. Run `fcso` from a folder to filter the current directory and respect the `.foldercontentspitteroutterignore` file:
+1. Run `fcso` from a folder to filter the current directory and respect both the `.gitignore` and `.foldercontentspitteroutterignore` files:
    ```bash
    fcso --output output.md
    ```
@@ -72,6 +67,11 @@ If you've ever needed to combine files into a single document for processing or 
    fcso --output output.md --filter-only src/ README.md
    ```
 
+5. Ignore `.gitignore` and process all files:
+   ```bash
+   fcso --output output.md --no-gitignore
+   ```
+
 ### Advanced Usage:
 
 - Create a `.foldercontentspitteroutterignore` file in your project folder. Example `.foldercontentspitteroutterignore`:
@@ -86,10 +86,21 @@ If you've ever needed to combine files into a single document for processing or 
    fcso --output output.md src/ README.md
    ```
 
+- You can also disable `.gitignore` filtering while still respecting `.foldercontentspitteroutterignore`:
+   ```bash
+   fcso --output output.md --no-gitignore
+   ```
+
+- Print the full directory tree:
+   ```bash
+   fcso --output output.md --print-tree
+   ```
+
 ### Command-Line Options:
 - `-o|--output <output_file>`: Specify the output file where the filtered content will be written.
 - `-t|--print-tree`: Print the directory tree at the top of the output file.
 - `-f|--filter-only`: Include only the specified files/folders for filtering.
+- `--no-gitignore`: Disable `.gitignore` filtering.
 - `[files/folders]`: Additional arguments that specify which files or folders to include.
 
 ---
