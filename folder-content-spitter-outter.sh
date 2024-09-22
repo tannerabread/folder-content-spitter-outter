@@ -76,7 +76,6 @@ else
 fi
 
 # Collect the additional command-line filters
-INCLUDES=("$@")
 echo "Additional includes from command-line: ${INCLUDES[@]}"
 
 # Generate the list of files based on includes
