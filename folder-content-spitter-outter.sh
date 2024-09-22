@@ -19,16 +19,30 @@ usage() {
 
 # Parse command-line arguments
 echo "Parsing command-line arguments..."
-while getopts ":o:t" opt; do
-  case $opt in
-    -o|--output) OUTPUT_FILE="$OPTARG" ;;
-    -t|--print-tree) PRINT_TREE=true ;; 
-    -f|--filter-only) FILTER_ONLY=true ;;
-    \?) echo "Invalid option: -$OPTARG" >&2; usage ;;
-    :) echo "Option -$OPTARG requires an argument." >&2; usage ;;
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    -o|--output)
+      OUTPUT_FILE="$2"
+      shift 2
+      ;;
+    -t|--print-tree)
+      PRINT_TREE=true
+      shift
+      ;;
+    -f|--filter-only)
+      FILTER_ONLY=true
+      shift
+      ;;
+    -*)
+      echo "Invalid option: $1"
+      usage
+      ;;
+    *)
+      INCLUDES+=("$1")
+      shift
+      ;;
   esac
 done
-shift $((OPTIND -1))
 
 # If no output file is provided, exit
 if [[ -z "$OUTPUT_FILE" ]]; then
@@ -109,7 +123,7 @@ done
 echo "Files after exclusion: ${FILE_LIST[@]}"
 
 # If the print tree flag is set, print the directory tree at the top of the output file
-if [ "$PRINT_TREE" = treu ]; then
+if [ "$PRINT_TREE" = true ]; then
   echo "Printing the full directory tree at the top of the output file..."
   echo "## Full Directory Tree" >> "$OUTPUT_FILE"
   tree . >> "$OUTPUT_FILE"
