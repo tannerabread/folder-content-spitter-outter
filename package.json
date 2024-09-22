@@ -1,6 +1,6 @@
 {
     "name": "folder-content-spitter-outter",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "A script for filtering files and folders and outputting them to a file with markdown",
     "bin": {
       "folder-content-spitter-outter": "folder-content-spitter-outter.sh"
