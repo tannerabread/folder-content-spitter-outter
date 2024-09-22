@@ -1,10 +1,10 @@
-# Filter Content Spitter-Outer (FCSO)
+# Folder Content Spitter-Outer (FCSO)
 
 ## Overview
 
-The **Filter Content Spitter-Outer (FCSO)** is a powerful shell-based tool for filtering files and folders in a directory tree. It allows you to:
+The **Folder Content Spitter-Outer (FCSO)** is a powerful shell-based tool for filtering files and folders in a directory tree. It allows you to:
 
-- **Automatically exclude files and folders** using a `.filterignore` file (similar to `.gitignore`).
+- **Automatically exclude files and folders** using a `.foldercontentspitteroutterignore` file (similar to `.gitignore`).
 - **Filter files/folders dynamically** by specifying them as command-line arguments.
 - **Output contents of filtered files** into a single file with markdown code block formatting.
 - **Highlight syntax** based on file extensions (e.g., `.js`, `.py`, `.ts`).
@@ -18,8 +18,8 @@ If you've ever needed to combine files into a single document for processing or 
 
 ## Features
 
-- **.filterignore**: Like `.gitignore`, this file allows you to specify files and folders that should always be excluded from processing.
-- **Command-line filtering**: You can pass specific files or folders to include dynamically, after respecting the `.filterignore` file.
+- **.foldercontentspitteroutterignore**: Like `.gitignore`, this file allows you to specify files and folders that should always be excluded from processing.
+- **Command-line filtering**: You can pass specific files or folders to include dynamically, after respecting the `.foldercontentspitteroutterignore` file.
 - **Automatic markdown formatting**: Outputs the contents of filtered files into a single file formatted in markdown with code blocks.
 - **Dynamic syntax highlighting**: Detects and highlights code based on file extensions (e.g., JavaScript, Python, CSS).
 - **Alias for ease of use**: You can automatically alias this tool to `fcso` on installation for quick access.
@@ -32,7 +32,7 @@ If you've ever needed to combine files into a single document for processing or 
 
 1. Add the custom tap:
    ```bash
-   brew tap your-username/fcso
+   brew tap tannerabread/folder-content-spitter-outter
    ```
 
 2. Install the tool:
