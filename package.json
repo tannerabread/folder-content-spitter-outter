@@ -1,9 +1,9 @@
 {
     "name": "folder-content-spitter-outter",
-    "version": "1.1.0",
+    "version": "1.2.2",
     "description": "A script for filtering files and folders and outputting them to a file with markdown",
     "bin": {
-      "filter-script": "folder-content-spitter-outter.sh"
+      "folder-content-spitter-outter": "folder-content-spitter-outter.sh"
     },
     "repository": {
       "type": "git",
