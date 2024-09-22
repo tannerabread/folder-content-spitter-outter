@@ -56,6 +56,9 @@ echo "Output file set to: $OUTPUT_FILE"
 echo "Ensuring output directory exists..."
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
+# Clear the output file to ensure it's overwritten
+truncate -s 0 "$OUTPUT_FILE"
+
 # Prevent processing the output file
 echo "Preventing processing of the output file..."
 EXCLUDES+=("$OUTPUT_FILE")
